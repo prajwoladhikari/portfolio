@@ -58,7 +58,54 @@ document.addEventListener('DOMContentLoaded', function() {
             bar.style.width = width + '%';
         });
     }
+    const certificateLinks = document.querySelectorAll('[data-lightbox="certificates"]');
+    const lightbox = document.createElement('div');
+    lightbox.className = 'lightbox';
+    lightbox.innerHTML = `
+        <span class="lightbox-close">&times;</span>
+        <img src="" alt="Certificate">
+    `;
+    document.body.appendChild(lightbox);
     
+    const lightboxImg = lightbox.querySelector('img');
+    const lightboxClose = lightbox.querySelector('.lightbox-close');
+    
+    // Open lightbox
+    certificateLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            lightbox.style.display = 'flex';
+            lightboxImg.src = this.href;
+        });
+    });
+    
+    // Close lightbox
+    lightboxClose.addEventListener('click', function() {
+        lightbox.style.display = 'none';
+    });
+    
+    // Close when clicking outside image
+    lightbox.addEventListener('click', function(e) {
+        if (e.target === lightbox) {
+            lightbox.style.display = 'none';
+        }
+    });
+    
+    // GSAP Animation for Certificates
+    gsap.utils.toArray('.certificate-card').forEach((card, i) => {
+        gsap.from(card, {
+            scrollTrigger: {
+                trigger: '.certificates-grid',
+                start: 'top 80%',
+                toggleActions: 'play none none none'
+            },
+            y: 50,
+            opacity: 0,
+            duration: 0.8,
+            delay: i * 0.1,
+            ease: 'power3.out'
+        });
+    });
     // Initialize GSAP animations
     gsap.registerPlugin(ScrollTrigger);
     
